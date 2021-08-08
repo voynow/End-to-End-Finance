@@ -1,30 +1,19 @@
 import datetime
 
 import numpy as np
-import pandas_datareader.data as web
+import pandas as pd
+
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
-AAPL = web.DataReader(
-	"AAPL", 
-	'yahoo', 
-	start='1990-01-01', 
-	end=datetime.datetime.now())
+import yfinance as yf
 
-MSFT = web.DataReader(
-	"MSFT", 
-	'yahoo', 
-	start='1990-01-01', 
-	end=datetime.datetime.now())
+current_datetime = datetime.datetime.now()
 
-AMZN = web.DataReader(
-	"IBM", 
-	'yahoo', 
-	start='1990-01-01', 
-	end=datetime.datetime.now())
+symbols = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0]["Symbol"].values
 
-plt.plot(AAPL.index, np.log(AAPL["Close"].values), linewidth=1.5, label='AAPL')
-plt.plot(MSFT.index, np.log(MSFT["Close"].values), linewidth=1.5, label='MSFT')
-plt.plot(AMZN.index, np.log(AMZN["Close"].values), linewidth=1.5, label='IBM')
-plt.legend()
-plt.show()
+space = " "
+symbols_string = space.join(symbols)
+symbols_string = symbols_string.replace(".", "-")
+
+data = yf.download(symbols_string, start='2000-01-01')
