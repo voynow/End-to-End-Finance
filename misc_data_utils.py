@@ -5,7 +5,7 @@ organize and document. -voynow 8/15/2021 """
 
 import numpy as np
 import pandas as pd
-import pandas_datareader as pdr
+import yfinance as yf
 
 from datetime import datetime
 
@@ -22,8 +22,9 @@ def get_snp_data(size=None, start='2010-01-01', end=datetime.now()):
 	if size:
 		random_idxs = np.random.choice(len(symbols), size=size, replace=False)
 		symbols = symbols[random_idxs]
-
 	print("Using {} symbols".format(len(symbols)))
+
+	# Edit symbols for correct format, alert user of changes
 	for i in range(len(symbols)):
 		if "." in symbols[i]:
 			string = "Changing symbol {} to".format(symbols[i])
@@ -32,7 +33,7 @@ def get_snp_data(size=None, start='2010-01-01', end=datetime.now()):
 			print(string)
 
 	# load data from 'start' to 'end' as specified by function params
-	data = pdr.DataReader(symbols, start=start, end=end, data_source='yahoo')
+	data = yf.download(" ".join(symbols), start=start, end=end)
 
 	return data
 
