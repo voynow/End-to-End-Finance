@@ -5,7 +5,7 @@ organize and document. -voynow 8/15/2021 """
 
 import numpy as np
 import pandas as pd
-import yfinance as yf
+import pandas_datareader as pdr
 
 from datetime import datetime
 
@@ -23,13 +23,16 @@ def get_snp_data(size=None, start='2010-01-01', end=datetime.now()):
 		random_idxs = np.random.choice(len(symbols), size=size, replace=False)
 		symbols = symbols[random_idxs]
 
-	# concatenate symbols into string for yfinance api
-	space = " "
-	symbols_string = space.join(symbols)
-	symbols_string = symbols_string.replace(".", "-")
+	print("Using {} symbols".format(len(symbols)))
+	for i in range(len(symbols)):
+		if "." in symbols[i]:
+			string = "Changing symbol {} to".format(symbols[i])
+			symbols[i] = symbols[i].replace(".", "-")
+			string += " {}".format(symbols[i])
+			print(string)
 
 	# load data from 'start' to 'end' as specified by function params
-	data = yf.download(symbols_string, start=start, end=end)
+	data = pdr.DataReader(symbols, start=start, end=end, data_source='yahoo')
 
 	return data
 
