@@ -65,27 +65,6 @@ def remove_nan_cols(data, pct=.05):
 	return data
 
 
-def get_asset_growth(data):
-
-	# get close data
-	close_data = data["Adj Close"]
-
-	# find growth of assets over time interval
-	growth = close_data.iloc[-1] / close_data.iloc[0]
-	growth.dropna(inplace=True)
-	sorted_growth = growth.iloc[np.argsort(growth.values)[::-1]]
-
-	return sorted_growth
-
-
-def normalize(data):
-
-	universal_min_value = data - np.min(data)
-	data_range = np.max(data) - np.min(data)
-
-	return (universal_min_value / data_range)
-
-
 def clean_data(data):
 
     # get data without nan values
