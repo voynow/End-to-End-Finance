@@ -10,15 +10,23 @@ import yfinance as yf
 from datetime import datetime
 
 
-def get_snp_data(size=None, start='2010-01-01', end=datetime.now()):
+def get_data(source="snp", size=None, start='2010-01-01', end=datetime.now(), interval='1d'):
 
-	wiki_snp_link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+	if source == "snp":
+		wiki_snp_link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
 
-	# get current snp symbols
-	snp_wiki = pd.read_html(wiki_snp_link)
-	symbols = snp_wiki[0]['Symbol'].values
+		# get current snp symbols
+		snp_wiki = pd.read_html(wiki_snp_link)
+		symbols = snp_wiki[0]['Symbol'].values
 
-	# access random subset of snp symbols
+	elif source == "russell":
+		df = pd.read_csv('data/Russell3000_symbols.txt', sep='\t')
+		symbols = df["Symbol"].values
+
+	else:
+		raise ValueError("Source input must be either 'snp' or 'russell'")
+
+	# access random subset of symbols
 	if size:
 		random_idxs = np.random.choice(len(symbols), size=size, replace=False)
 		symbols = symbols[random_idxs]
@@ -31,9 +39,14 @@ def get_snp_data(size=None, start='2010-01-01', end=datetime.now()):
 			symbols[i] = symbols[i].replace(".", "-")
 			string += " {}".format(symbols[i])
 			print(string)
+	symbol_string = " ".join(symbols)
 
 	# load data from 'start' to 'end' as specified by function params
-	data = yf.download(" ".join(symbols), start=start, end=end)
+	data = yf.download(
+		symbol_string, 
+		start=start, 
+		end=end, 
+		interval=interval)
 
 	return data
 
@@ -71,3 +84,73 @@ def normalize(data):
 	data_range = np.max(data) - np.min(data)
 
 	return (universal_min_value / data_range)
+
+
+def clean_data(data):
+
+    # get data without nan values
+    isnan_bool = np.isnan(data[0])
+    nan_cols = np.where(isnan_bool)[0]
+    raw_data_clean = data[:, np.where(1 - isnan_bool)[0]]
+
+    # get data/location of nan values
+    nan_data = data[:, nan_cols]
+    rows, cols = np.where(np.isnan(nan_data))
+
+    # remove nans
+    cleaned_data = []
+    for i in range(nan_data.shape[1]):
+        last_nan_row = np.max(rows[np.where(cols == i)])
+        not_nan_data = nan_data[:, i][last_nan_row + 1:]
+        if len(not_nan_data):
+            cleaned_data.append(not_nan_data)
+
+    # concatenate all data
+    for i in range(raw_data_clean.shape[1]):
+        cleaned_data.append(raw_data_clean[:, i])
+
+    # get indexes: data with > 10% zeros
+    remove_idxs = []
+    for i in range(len(cleaned_data)):
+        if len(np.where(cleaned_data[i] == 0)[0]) / len(cleaned_data[i]) > .1:
+            remove_idxs.append(i)
+
+    # remove data
+    cleaned_data_ = []
+    for i in range(len(cleaned_data)):
+        if i not in remove_idxs:
+            cleaned_data_.append(cleaned_data[i])
+
+    return cleaned_data_
+    
+
+def slice_sequences(sequences, lag=10, classification=False):
+    
+    # create input-output data with lagged price change values as input
+    inputs = []
+    outputs = []
+    for seq in sequences:
+        inputs.append(np.array([seq[i-lag:i] for i in range(lag, len(seq))]))
+        outputs.append(np.array([seq[i] for i in range(lag, len(seq))]))
+
+    inputs = np.vstack(inputs)
+    outputs = np.hstack(outputs)
+
+    if classification:
+     	outputs = np.greater(outputs, np.zeros(len(outputs)))
+
+    return inputs, outputs
+
+
+def train_test_split(sequences, test_size=.25):
+
+ 	test_len = int(len(sequences) * test_size)
+ 	all_idxs = np.random.choice(len(sequences), size=len(sequences), replace=False)
+ 	test_idxs = all_idxs[:test_len]
+ 	train_idxs = all_idxs[test_len:]
+
+ 	seq_arr = np.array(sequences, dtype='object')
+ 	train_data = seq_arr[train_idxs]
+ 	test_data = seq_arr[test_idxs]
+
+ 	return train_data, test_data
