@@ -29,13 +29,11 @@ def build_nn(input_shape=None, num_layers=6, nodes=64, activation='relu', output
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
     else:
         model.compile(loss='mse', optimizer='adam')
-
-    print(model.summary())
     
     return model
 
 
-def train_nn(model, x_train, y_train, test, epochs=10, batch_size=1024):
+def train_nn(model, x_train, y_train, test, epochs=40, batch_size=2048):
     
     history = model.fit(
         x_train,

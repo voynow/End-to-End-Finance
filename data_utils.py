@@ -103,7 +103,7 @@ def clean_data(data):
     return cleaned_data_
     
 
-def slice_sequences(sequences, lag=10, classification=False):
+def slice_sequences(sequences, lag=25, classification=False):
     
     # create input-output data with lagged price change values as input
     inputs = []
