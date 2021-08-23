@@ -33,7 +33,7 @@ def build_nn(input_shape=None, num_layers=6, nodes=64, activation='relu', output
     return model
 
 
-def train_nn(model, x_train, y_train, test, epochs=40, batch_size=2048):
+def train_nn(model, x_train, y_train, test, epochs=20, batch_size=2048):
     
     history = model.fit(
         x_train,
