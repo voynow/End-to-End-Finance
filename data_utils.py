@@ -109,10 +109,9 @@ def slice_sequences(sequences, lag=25, classification=False):
     inputs = []
     outputs = []
     for seq in sequences:
-    	if len(seq) <= lag:
-    		pass
-    	inputs.append(np.array([seq[i-lag:i] for i in range(lag, len(seq))]))
-    	outputs.append(np.array([seq[i] for i in range(lag, len(seq))]))
+    	if len(seq) > lag:
+    		inputs.append(np.array([seq[i-lag:i] for i in range(lag, len(seq))]))
+    		outputs.append(np.array([seq[i] for i in range(lag, len(seq))]))
 
     inputs = np.vstack(inputs)
     outputs = np.hstack(outputs)
