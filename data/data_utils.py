@@ -20,7 +20,8 @@ def get_data(source="snp", size=None, start='1990-01-01', end=datetime.now(), in
 		symbols = snp_wiki[0]['Symbol'].values
 
 	elif source == "russell":
-		df = pd.read_csv('C:\\Users\\voyno\\Desktop\\finance\\data\\Russell3000_symbols.txt', sep='\t')
+		txt = 'C:\\Users\\voyno\\Desktop\\finance\\datasets\\Russell3000_symbols.txt'
+		df = pd.read_csv(txt, sep='\t')
 		symbols = df["Symbol"].values
 
 	else:

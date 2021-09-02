@@ -1,12 +1,11 @@
 import sys
+sys.path.append("C:\\Users\\voyno\\Desktop\\finance\\")
+
 import sqlite3
+import data_utils
 
 import numpy as np
 import pandas as pd
-
-# get data_utils from finance repo
-sys.path.append("C:\\Users\\voyno\\Desktop\\finance\\")
-import data_utils
 
 # connect to database and create cursor
 conn = sqlite3.connect("financial_data.db")
