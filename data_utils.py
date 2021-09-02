@@ -1,6 +1,6 @@
-""" These utility functions serve as the beginning of my applied financial utility suite. It may 
-seem like there is no organization/documentation of these functions, and for now that is true. 
-Sometime in the future when the repository is more mature and complex, developments will be made to 
+""" These utility functions serve as the beginning of my applied financial utility suite. It may
+seem like there is no organization/documentation of these functions, and for now that is true.
+Sometime in the future when the repository is more mature and complex, developments will be made to
 organize and document. -voynow 8/15/2021 """
 
 import numpy as np
@@ -10,7 +10,7 @@ import yfinance as yf
 from datetime import datetime
 
 
-def get_data(source="snp", size=None, start='2010-01-01', end=datetime.now(), interval='1d'):
+def get_data(source="snp", size=None, start='1990-01-01', end=datetime.now(), interval='1d'):
 
 	if source == "snp":
 		wiki_snp_link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
@@ -20,7 +20,7 @@ def get_data(source="snp", size=None, start='2010-01-01', end=datetime.now(), in
 		symbols = snp_wiki[0]['Symbol'].values
 
 	elif source == "russell":
-		df = pd.read_csv('data/Russell3000_symbols.txt', sep='\t')
+		df = pd.read_csv('C:\\Users\\voyno\\Desktop\\finance\\data\\Russell3000_symbols.txt', sep='\t')
 		symbols = df["Symbol"].values
 
 	else:
@@ -43,9 +43,9 @@ def get_data(source="snp", size=None, start='2010-01-01', end=datetime.now(), in
 
 	# load data from 'start' to 'end' as specified by function params
 	data = yf.download(
-		symbol_string, 
-		start=start, 
-		end=end, 
+		symbol_string,
+		start=start,
+		end=end,
 		interval=interval)
 
 	return data
@@ -101,10 +101,10 @@ def clean_data(data):
             cleaned_data_.append(cleaned_data[i])
 
     return cleaned_data_
-    
+
 
 def slice_sequences(sequences, lag=25, classification=False):
-    
+
     # create input-output data with lagged price change values as input
     inputs = []
     outputs = []
