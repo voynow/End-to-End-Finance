@@ -2,10 +2,9 @@ import sys
 sys.path.append("C:\\Users\\voyno\\Desktop\\finance\\")
 
 import sqlite3
-import data_utils
-
 import numpy as np
 import pandas as pd
+from data import data_utils
 
 # connect to database and create cursor
 conn = sqlite3.connect("financial_data.db")
@@ -36,7 +35,6 @@ def load_yfinance_data():
 
     # get price data from yfinance api
     df = data_utils.get_data(source="russell")
-    df.columns = [(feature.replace(" ", "_"), symbol) for feature, symbol in df.columns]
 
     return df
 
@@ -48,15 +46,14 @@ def insert_data(df, table):
     for symbol in unique_symbols:
 
         # get data associated with symbol
-        symbol_cols = df.columns.values[[symbol in col for col in df.columns]]
-        symbol_df = df[symbol_cols]
-        symbol_df.columns = [feature for feature, _ in symbol_df.columns]
+        symbol_df = df.xs(symbol, level=1, drop_level=True, axis=1)
 
         # create columns for Symbol, Dt
         symbol_repeated = [symbol for i in range(len(symbol_df))]
         symbol_df = symbol_df.assign(Symbol=symbol_repeated)
         symbol_df.index.rename("Dt", inplace=True)
         symbol_df.dropna(axis=0, inplace=True)
+        symbol_df.rename({"Adj Close": "Adj_Close"}, axis=1, inplace=True)
 
         # add data to price_history table
         symbol_df.to_sql(name=table, con=conn, if_exists='append', index=True)

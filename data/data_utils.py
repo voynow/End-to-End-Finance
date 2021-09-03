@@ -68,70 +68,70 @@ def remove_nan_cols(data, pct=.05):
 
 def clean_data(data):
 
-    # get data without nan values
-    isnan_bool = np.isnan(data[0])
-    nan_cols = np.where(isnan_bool)[0]
-    raw_data_clean = data[:, np.where(1 - isnan_bool)[0]]
+	# get data without nan values
+	isnan_bool = np.isnan(data[0])
+	nan_cols = np.where(isnan_bool)[0]
+	raw_data_clean = data[:, np.where(1 - isnan_bool)[0]]
 
-    # get data/location of nan values
-    nan_data = data[:, nan_cols]
-    rows, cols = np.where(np.isnan(nan_data))
+	# get data/location of nan values
+	nan_data = data[:, nan_cols]
+	rows, cols = np.where(np.isnan(nan_data))
 
-    # remove nans
-    cleaned_data = []
-    for i in range(nan_data.shape[1]):
-        last_nan_row = np.max(rows[np.where(cols == i)])
-        not_nan_data = nan_data[:, i][last_nan_row + 1:]
-        if len(not_nan_data):
-            cleaned_data.append(not_nan_data)
+	# remove nans
+	cleaned_data = []
+	for i in range(nan_data.shape[1]):
+		last_nan_row = np.max(rows[np.where(cols == i)])
+		not_nan_data = nan_data[:, i][last_nan_row + 1:]
+		if len(not_nan_data):
+			cleaned_data.append(not_nan_data)
 
-    # concatenate all data
-    for i in range(raw_data_clean.shape[1]):
-        cleaned_data.append(raw_data_clean[:, i])
+	# concatenate all data
+	for i in range(raw_data_clean.shape[1]):
+		cleaned_data.append(raw_data_clean[:, i])
 
-    # get indexes: data with > 10% zeros
-    remove_idxs = []
-    for i in range(len(cleaned_data)):
-        if len(np.where(cleaned_data[i] == 0)[0]) / len(cleaned_data[i]) > .1:
-            remove_idxs.append(i)
+	# get indexes: data with > 10% zeros
+	remove_idxs = []
+	for i in range(len(cleaned_data)):
+		if len(np.where(cleaned_data[i] == 0)[0]) / len(cleaned_data[i]) > .1:
+			remove_idxs.append(i)
 
-    # remove data
-    cleaned_data_ = []
-    for i in range(len(cleaned_data)):
-        if i not in remove_idxs:
-            cleaned_data_.append(cleaned_data[i])
+	# remove data
+	cleaned_data_ = []
+	for i in range(len(cleaned_data)):
+		if i not in remove_idxs:
+			cleaned_data_.append(cleaned_data[i])
 
-    return cleaned_data_
+	return cleaned_data_
 
 
 def slice_sequences(sequences, lag=25, classification=False):
 
-    # create input-output data with lagged price change values as input
-    inputs = []
-    outputs = []
-    for seq in sequences:
-    	if len(seq) > lag:
-    		inputs.append(np.array([seq[i-lag:i] for i in range(lag, len(seq))]))
-    		outputs.append(np.array([seq[i] for i in range(lag, len(seq))]))
+	# create input-output data with lagged price change values as input
+	inputs = []
+	outputs = []
+	for seq in sequences:
+		if len(seq) > lag:
+			inputs.append(np.array([seq[i-lag:i] for i in range(lag, len(seq))]))
+			outputs.append(np.array([seq[i] for i in range(lag, len(seq))]))
 
-    inputs = np.vstack(inputs)
-    outputs = np.hstack(outputs)
+	inputs = np.vstack(inputs)
+	outputs = np.hstack(outputs)
 
-    if classification:
-     	outputs = np.greater(outputs, np.zeros(len(outputs)))
+	if classification:
+		outputs = np.greater(outputs, np.zeros(len(outputs)))
 
-    return inputs, outputs
+	return inputs, outputs
 
 
 def train_test_split(sequences, test_size=.25):
 
- 	test_len = int(len(sequences) * test_size)
- 	all_idxs = np.random.choice(len(sequences), size=len(sequences), replace=False)
- 	test_idxs = all_idxs[:test_len]
- 	train_idxs = all_idxs[test_len:]
+	test_len = int(len(sequences) * test_size)
+	all_idxs = np.random.choice(len(sequences), size=len(sequences), replace=False)
+	test_idxs = all_idxs[:test_len]
+	train_idxs = all_idxs[test_len:]
 
- 	seq_arr = np.array(sequences, dtype='object')
- 	train_data = seq_arr[train_idxs]
- 	test_data = seq_arr[test_idxs]
+	seq_arr = np.array(sequences, dtype='object')
+	train_data = seq_arr[train_idxs]
+	test_data = seq_arr[test_idxs]
 
- 	return train_data, test_data
+	return train_data, test_data
