@@ -1,7 +1,7 @@
 import sys
 sys.path.append("C:/Users/voyno/Desktop/finance")
 
-import data_utils
+from data import data_utils
 import matplotlib.pyplot as plt
 
 from tensorflow.keras import Sequential
