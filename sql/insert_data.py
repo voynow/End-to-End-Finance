@@ -34,7 +34,7 @@ def create_table(table):
 def load_yfinance_data():
 
     # get price data from yfinance api
-    df = data_utils.get_data(source="russell")
+    df = data_utils.get_data(source="russell", interval="1h")
 
     return df
 

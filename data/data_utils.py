@@ -10,7 +10,7 @@ import yfinance as yf
 from datetime import datetime
 
 
-def get_data(source="snp", size=None, start='1990-01-01', end=datetime.now(), interval='1d'):
+def get_data(source="snp", size=None, start='2019-09-10', end=datetime.now(), interval='1d'):
 
 	if source == "snp":
 		wiki_snp_link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
