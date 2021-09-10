@@ -7,10 +7,15 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def get_data(source="snp", size=None, start='2019-09-10', end=datetime.now(), interval='1d'):
+
+
+	if interval == '1h':
+		max_days_1h = 729
+		start = datetime.now() - timedelta(days = max_days_1h)
 
 	if source == "snp":
 		wiki_snp_link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
