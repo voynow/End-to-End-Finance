@@ -3,4 +3,4 @@ __pycache__
 
 sql/financial_data.db
 sql/__pycache__
-sql/config
+sql/config.py
