@@ -31,12 +31,14 @@ c = con.cursor()
 def load_yfinance_data():
 
     # get data from yfinance api
-    df = data_utils.get_data(source='russell', size=100, interval='1h')
+    df = data_utils.get_data(source='russell', interval='1h')
 
     return df
 
 
 def insert_data(df):
+
+    table_name = "price_history"
 
     # iter over unique symbols
     first_df = True
@@ -55,11 +57,11 @@ def insert_data(df):
 
         # if first df, create price_history table
         if first_df:
-            symbol_df.to_sql('test', con=engine, if_exists='replace', index=True)
+            symbol_df.to_sql(table_name, con=engine, if_exists='replace', index=True)
             first_df = False
 
         # add data to price_history table
-        symbol_df.to_sql('test', con=engine, if_exists='append', index=True)
+        symbol_df.to_sql(table_name, con=engine, if_exists='append', index=True)
 
 
 def main():
@@ -70,3 +72,5 @@ def main():
 
 main()
 con.close()
+
+# TODO: Add logic for appending data if db already exists
