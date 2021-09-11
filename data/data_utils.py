@@ -107,36 +107,3 @@ def clean_data(data):
 			cleaned_data_.append(cleaned_data[i])
 
 	return cleaned_data_
-
-
-def slice_sequences(sequences, lag=25, classification=False):
-
-	# create input-output data with lagged price change values as input
-	inputs = []
-	outputs = []
-	for seq in sequences:
-		if len(seq) > lag:
-			inputs.append(np.array([seq[i-lag:i] for i in range(lag, len(seq))]))
-			outputs.append(np.array([seq[i] for i in range(lag, len(seq))]))
-
-	inputs = np.vstack(inputs)
-	outputs = np.hstack(outputs)
-
-	if classification:
-		outputs = np.greater(outputs, np.zeros(len(outputs)))
-
-	return inputs, outputs
-
-
-def train_test_split(sequences, test_size=.25):
-
-	test_len = int(len(sequences) * test_size)
-	all_idxs = np.random.choice(len(sequences), size=len(sequences), replace=False)
-	test_idxs = all_idxs[:test_len]
-	train_idxs = all_idxs[test_len:]
-
-	seq_arr = np.array(sequences, dtype='object')
-	train_data = seq_arr[train_idxs]
-	test_data = seq_arr[test_idxs]
-
-	return train_data, test_data
