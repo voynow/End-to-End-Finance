@@ -1,6 +1,7 @@
 .ipynb_checkpoints
 __pycache__
+config.py
 
 sql/financial_data.db
 sql/__pycache__
-sql/config.py
+

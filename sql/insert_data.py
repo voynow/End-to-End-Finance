@@ -36,9 +36,7 @@ def load_yfinance_data():
     return df
 
 
-def insert_data(df):
-
-    table_name = "price_history"
+def insert_data(df, table_name):
 
     # iter over unique symbols
     first_df = True
@@ -51,9 +49,10 @@ def insert_data(df):
         # create columns for Symbol, Dt
         symbol_repeated = [symbol for i in range(len(symbol_df))]
         symbol_df = symbol_df.assign(Symbol=symbol_repeated)
-        symbol_df.index.rename("Dt", inplace=True)
+        symbol_df.index.rename("dt", inplace=True)
         symbol_df.dropna(axis=0, inplace=True)
-        symbol_df.rename({"Adj Close": "Adj_Close"}, axis=1, inplace=True)
+        symbol_df.rename({"Adj Close": "adj_close"}, axis=1, inplace=True)
+        symbol_df.columns = [col.lower() for col in symbol_df.columns]
 
         # if first df, create price_history table
         if first_df:
@@ -66,8 +65,10 @@ def insert_data(df):
 
 def main():
 
+    table_name = "price_history"
+
     data = load_yfinance_data()
-    insert_data(data)
+    insert_data(data, table_name)
 
 
 main()
