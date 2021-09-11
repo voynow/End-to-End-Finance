@@ -1,4 +1,4 @@
-### My second attempt at creating a framework for doing data science, statistical programming, and other fun things in the finacial domain.
+## History
 
 **08/08/2021** See repository github.com/voynow/Financial-Analysis-Deep-Learning for first attempt. 
 In this repository, my goal is to expand upon the knowledge have gained in the domains of finance, software engineering, data science, and machine learning to create a more professional and usable product, yielding informative results and applicable systems.
