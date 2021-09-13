@@ -31,7 +31,7 @@ c = con.cursor()
 def load_yfinance_data():
 
     # get data from yfinance api
-    df = data_utils.get_data(source='russell', interval='1h')
+    df = data_utils.get_data(source='russell', interval='1d')
 
     return df
 

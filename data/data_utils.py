@@ -10,7 +10,7 @@ import yfinance as yf
 from datetime import datetime, timedelta
 
 
-def get_data(source="snp", size=None, start='2019-09-10', end=datetime.now(), interval='1d'):
+def get_data(source="snp", size=None, start='2000-01-01', end=datetime.now(), interval='1d'):
 
 
 	if interval == '1h':
