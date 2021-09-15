@@ -1,28 +1,13 @@
 import sys
 sys.path.append("C:\\Users\\voyno\\Desktop\\finance\\")
 
-import psycopg2
-from sqlalchemy import create_engine
-
 import numpy as np
 import pandas as pd
 
+import db_utils
 from data import data_utils
-from config import get_password
 
-
-# retrieve password
-password = get_password()
-
-# create sqlalchemy engine
-engine = create_engine(f'postgresql://postgres:{password}@localhost:5432/financial_data')
-
-# Connect to postgres financial_data database
-con = psycopg2.connect(
-            host="localhost",
-            database="financial_data",
-            user='postgres',
-            password=f'{password}')
+con, engine = db_utils.db_init()
 
 # create cursor
 c = con.cursor()
@@ -68,7 +53,7 @@ def main():
     table_name = "price_history"
 
     data = load_yfinance_data()
-    insert_data(data, table_name)
+    create_table(data, table_name)
 
 
 main()
