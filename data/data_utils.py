@@ -12,11 +12,12 @@ from datetime import datetime, timedelta
 
 def get_data(source="snp", size=None, start='2000-01-01', end=datetime.now(), interval='1d'):
 
-
+	# max data for 1h interval
 	if interval == '1h':
 		max_days_1h = 729
 		start = datetime.now() - timedelta(days = max_days_1h)
 
+	# snp index stocks
 	if source == "snp":
 		wiki_snp_link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
 
@@ -24,6 +25,7 @@ def get_data(source="snp", size=None, start='2000-01-01', end=datetime.now(), in
 		snp_wiki = pd.read_html(wiki_snp_link)
 		symbols = snp_wiki[0]['Symbol'].values
 
+	# russell index stocks
 	elif source == "russell":
 		txt = 'C:\\Users\\voyno\\Desktop\\finance\\datasets\\Russell3000_symbols.txt'
 		df = pd.read_csv(txt, sep='\t')
