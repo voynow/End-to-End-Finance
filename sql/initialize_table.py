@@ -16,7 +16,7 @@ c = con.cursor()
 def load_yfinance_data():
 
     # get data from yfinance api
-    df = data_utils.get_data(source='russell')
+    df = data_utils.get_data(source='russell', interval='1h')
 
     return df
 
@@ -35,7 +35,7 @@ def insert_data(df, table_name):
         symbol_repeated = [symbol for i in range(len(symbol_df))]
         symbol_df = symbol_df.assign(Symbol=symbol_repeated)
         symbol_df.index.rename("dt", inplace=True)
-        symbol_df.dropna(axis=0, inplace=True)
+        symbol_df.fillna(-1)
         symbol_df.rename({"Adj Close": "adj_close"}, axis=1, inplace=True)
         symbol_df.columns = [col.lower() for col in symbol_df.columns]
 
