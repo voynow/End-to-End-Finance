@@ -11,10 +11,8 @@ con, engine = db_utils.db_init()
 
 c = con.cursor()
 
-start = time.time()
-df = data_utils.get_data(source='russell', start=datetime.now() - timedelta(days = 1), size=1000)
-print(time.time() - start)
+df = data_utils.get_data(source='russell', start=datetime.now() - timedelta(days = 6), size=2)
 
-start = time.time()
-df = data_utils.get_data(source='russell', start='2000-01-01', size=1000)
-print(time.time() - start)
+print(df.head())
+
+con.close()

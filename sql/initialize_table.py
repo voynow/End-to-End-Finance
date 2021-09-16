@@ -16,7 +16,7 @@ c = con.cursor()
 def load_yfinance_data():
 
     # get data from yfinance api
-    df = data_utils.get_data(source='russell', interval='1d')
+    df = data_utils.get_data(source='russell')
 
     return df
 
@@ -43,6 +43,7 @@ def insert_data(df, table_name):
         if first_df:
             symbol_df.to_sql(table_name, con=engine, if_exists='replace', index=True)
             first_df = False
+            continue
 
         # add data to price_history table
         symbol_df.to_sql(table_name, con=engine, if_exists='append', index=True)
@@ -53,10 +54,8 @@ def main():
     table_name = "price_history"
 
     data = load_yfinance_data()
-    create_table(data, table_name)
+    insert_data(data, table_name)
 
 
 main()
 con.close()
-
-# TODO: Add logic for appending data if db already exists
